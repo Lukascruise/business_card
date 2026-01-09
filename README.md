@@ -1,3 +1,4 @@
+```mermaid
 erDiagram
     USER {
         uuid id PK
@@ -70,3 +71,4 @@ erDiagram
     BUSINESS_CARD ||--o{ CARD_IMAGE : has
     BUSINESS_CARD ||--o{ SHARE_TOKEN : shared_by
     BUSINESS_CARD ||--o{ CARD_EVENT : emits
+    ```
