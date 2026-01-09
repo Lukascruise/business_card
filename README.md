@@ -1,4 +1,5 @@
 ```mermaid
+
 erDiagram
     USER {
         uuid id PK
@@ -67,9 +68,9 @@ erDiagram
     USER ||--o{ USER_COLLECTION : collects
     USER ||--o{ SHARE_TOKEN : creates
 
-    BUSINESS_CARD ||--o{ USER_COLLECTION : "collected_as"
-    BUSINESS_CARD ||--o{ CARD_IMAGE : "has"
-    BUSINESS_CARD ||--o{ SHARE_TOKEN : "shared_by"
-    BUSINESS_CARD ||--o{ CARD_EVENT : "emits"
+    BUSINESS_CARD ||--o{ USER_COLLECTION : collected_as
+    BUSINESS_CARD ||--o{ CARD_IMAGE : has
+    BUSINESS_CARD ||--o{ SHARE_TOKEN : shared_by
+    BUSINESS_CARD ||--o{ CARD_EVENT : emits
 
     ```
