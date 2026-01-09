@@ -73,4 +73,3 @@ erDiagram
     BUSINESS_CARD ||--o{ SHARE_TOKEN : shared_by
     BUSINESS_CARD ||--o{ CARD_EVENT : emits
 
-    ```
