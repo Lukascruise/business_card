@@ -1,6 +1,8 @@
-from typing import Generic, TypeVar, Optional, Union
+from typing import Generic, TypeVar, Union
+
 from pydantic import BaseModel
 from typing_extensions import Literal
+
 from core.domain.errors import ErrorCode
 
 T = TypeVar("T")

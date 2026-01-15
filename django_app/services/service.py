@@ -1,9 +1,10 @@
 from django.db import transaction
 from django.forms.models import model_to_dict
+
 from django_app.infra.r2_adapter import R2Client
 from django_app.models.card import Card
-from django_app.models.card_img import CardImage
 from django_app.models.card_event import CardEvent
+from django_app.models.card_img import CardImage
 
 
 class CardCreateService:
@@ -26,10 +27,10 @@ class CardCreateService:
             r2_key = f"cards/{user.id}/{card.id}/{image_file.name}"
             r2.upload_file(image_file, r2_key)
 
-            card_img = CardImage.objects.create(
+            CardImage.objects.create(
                 card=card,
                 image_path=r2_key,
-                raw_ocr_result={},  # MVP 단계에서는 빈 딕셔너리로 초기화
+                raw_ocr_result={},  # MVP 단계
             )
 
             # 3. CardEvent(CREATE) 기록

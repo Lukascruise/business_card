@@ -1,8 +1,9 @@
-from typing import Literal, Union
-from pydantic import BaseModel
-from core.schemas.base import ApiResponse
-from typing import Optional
 import uuid
+from typing import Literal, Union
+
+from pydantic import BaseModel
+
+from core.schemas.base import ApiResponse
 
 
 class CardDraft(BaseModel):

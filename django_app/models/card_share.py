@@ -1,6 +1,8 @@
 import uuid
+
 from django.db import models
 from django.utils import timezone
+
 from django_app.models.card import Card
 
 
