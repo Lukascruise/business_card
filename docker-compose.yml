@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: business_card_db
+    environment:
+      POSTGRES_DB: business_card_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    container_name: business_card_web
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"  # Django (Admin/Auth)
+      - "8001:8001"  # FastAPI (OCR/QR) - 별도 실행 시
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

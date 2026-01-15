@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ develop, main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  backend-ci:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: business_card_db
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U user"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DATABASE_URL: postgres://user:password@localhost:5432/business_card_db
+      DJANGO_SETTINGS_MODULE: config.settings
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: |
+          uv sync --frozen
+
+      - name: Ruff (lint)
+        run: |
+          uv run ruff check .
+
+      - name: Mypy (type check)
+        run: |
+          uv run mypy .
+
+      - name: Django system check
+        run: |
+          uv run python manage.py check
+
+      - name: Django migrate (dry run)
+        run: |
+          uv run python manage.py migrate --check --dry-run
+
+      - name: Docker build
+        run: |
+          docker build -t business-card-backend .
