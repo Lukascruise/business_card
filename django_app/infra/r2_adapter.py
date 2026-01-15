@@ -1,4 +1,5 @@
 import boto3
+from typing import Any
 from django.conf import settings
 from core.domain.storage.storage import StoragePresignerPort
 
