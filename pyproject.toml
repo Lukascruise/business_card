@@ -19,6 +19,7 @@ dependencies = [
 dev = [
     "mypy>=1.19.1",
     "ruff>=0.14.11",
+    "pre-commit>=4.5.0",
 ]
 
 [tool.ruff]
@@ -26,4 +27,3 @@ line-length = 88
 
 [tool.ruff.lint]
 select = ["E", "F", "I"] # 기본 오류, 미사용 변수, 임포트 정렬
-fix = true # 자동 수정 허용
