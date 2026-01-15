@@ -1,5 +1,5 @@
-from typing import Protocol, Any
 import uuid
+from typing import Any, Protocol
 
 
 class StoragePresignerPort(Protocol):

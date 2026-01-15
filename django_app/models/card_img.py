@@ -1,10 +1,12 @@
-from django.db import models
 import uuid
+
+from django.db import models
+
 from django_app.models.card import Card
 
 
 class CardImage(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     card = models.ForeignKey(Card, on_delete=models.CASCADE, related_name="images")
 
     image_path = models.CharField(max_length=500)
