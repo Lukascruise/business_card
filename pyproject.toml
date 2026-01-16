@@ -56,11 +56,11 @@ exclude = [
 ]
 
 # 앱별 완화
-[mypy-django_app.models.*]
+["mypy-django_app.models.*"]
 ignore_errors = true
 
-[mypy-django_app.views.*]
+["mypy-django_app.views.*"]
 ignore_errors = true
 
-[mypy-django_app.services.*]
+["mypy-django_app.services.*"]
 check_untyped_defs = true
