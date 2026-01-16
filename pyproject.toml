@@ -20,8 +20,12 @@ dev = [
     "mypy>=1.10",
     "ruff>=0.14.11",
     "pre-commit>=4.5.0",
+    "django-stubs>=5.2.8",
 ]
 
+[tool.django-stubs]
+django_settings_module = "config.settings"
+strict_settings = false
 
 [tool.ruff]
 line-length = 88
@@ -35,6 +39,7 @@ ignore = [
 
 
 [tool.mypy]
+plugins = ["mypy_django_plugin.main"]
 python_version = "3.12"
 warn_return_any = true
 warn_unused_ignores = true
@@ -42,7 +47,7 @@ warn_unused_ignores = true
 ignore_missing_imports = true
 check_untyped_defs = false
 disallow_untyped_defs = false
-disallow_any_return = false
+# disallow_any_return = false
 
 explicit_package_bases = true
 warn_unused_configs = true
@@ -56,11 +61,13 @@ exclude = [
 ]
 
 # 앱별 완화
-["mypy-django_app.models.*"]
+[[tool.mypy.overrides]]
+module = [
+    "django_app.models.*",
+    "django_app.views.*"
+]
 ignore_errors = true
 
-["mypy-django_app.views.*"]
-ignore_errors = true
-
-["mypy-django_app.services.*"]
+[[tool.mypy.overrides]]
+module = "django_app.services.*"
 check_untyped_defs = true

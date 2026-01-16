@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 # ruff: noqa: E501
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -117,3 +117,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
+
+
+R2_ACCOUNT_ID = os.getenv("R2_ACCOUNT_ID", "default")
+R2_ACCESS_KEY_ID = os.getenv("R2_ACCESS_KEY_ID", "default")
+R2_SECRET_ACCESS_KEY = os.getenv("R2_SECRET_ACCESS_KEY", "default")
+R2_BUCKET_NAME = os.getenv("R2_BUCKET_NAME", "default")
+CDN_BASE_URL = os.getenv("CDN_BASE_URL", "https://pub-xxx.r2.dev")
