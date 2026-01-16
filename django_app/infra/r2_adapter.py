@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, cast
 
 import boto3
 from django.conf import settings
@@ -23,11 +23,12 @@ class R2StorageAdapter(StoragePresignerPort):
         )
 
     def generate_presigned_url(self, key: str, expires_in: int = 3600) -> str:
-        return self.s3.generate_presigned_url(
+        url = self.s3.generate_presigned_url(
             ClientMethod="get_object",
             Params={"Bucket": self.bucket_name, "Key": key.lstrip("/")},
             ExpiresIn=expires_in,
         )
+        return cast(str, url)
 
     def upload_file(self, file: Any, key: str) -> str:
         self.s3.upload_fileobj(file, self.bucket_name, key.lstrip("/"))
