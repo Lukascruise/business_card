@@ -59,9 +59,13 @@ jobs:
         run: |
           uv run python manage.py check
 
-      - name: Django migrate (dry run)
+      - name: Django migration consistency check
         run: |
-          uv run python manage.py migrate --check --dry-run
+          uv run python manage.py makemigrations --check --dry-run
+
+      - name: Django migrate
+        run: |
+          uv run python manage.py migrate --noinput
 
       - name: Docker build
         run: |
