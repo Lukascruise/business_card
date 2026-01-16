@@ -4,11 +4,11 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
+
 dependencies = [
     "django>=6.0",
     "django-stubs>=5.2.8",
     "fastapi>=0.128.0",
-    "mypy>=1.19.1",
     "pydantic[email]>=2.12.5",
     "uvicorn>=0.40.0",
     "boto3>=1.35.0",
@@ -22,8 +22,29 @@ dev = [
     "pre-commit>=4.5.0",
 ]
 
+[tool.mypy]
+strict = true
+plugins = ["mypy_django_plugin.main"]
+explicit_package_bases = true
+warn_unused_configs = true
+
+["mypy-core.*"]
+strict = true
+
+["mypy-django_app.services.*"]
+strict = true
+
+["mypy-django_app.models.*"]
+ignore_errors = true
+
+[tool.django-stubs]
+django_settings_module = "config.settings"
+
+["mypy-django_app.infra.*"]
+ignore_missing_imports = true
+
 [tool.ruff]
 line-length = 88
 
 [tool.ruff.lint]
-select = ["E", "F", "I"] # 기본 오류, 미사용 변수, 임포트 정렬
+select = ["E", "F", "I"]
