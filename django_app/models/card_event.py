@@ -6,6 +6,8 @@ from django_app.models.card import Card
 
 
 class CardEvent(models.Model):
+    objects: models.Manager["CardEvent"]
+
     class EventType(models.TextChoices):
         CREATE = "CREATE", "Created"
         UPDATE = "UPDATE", "Updated"
@@ -26,7 +28,7 @@ class CardEvent(models.Model):
         choices=EventType.choices,
     )
 
-    # 이벤트에 대한 최소 메타 정보(스냅샷제거 추후 signal에서 처리)
+    # 이벤트에 대한 최소 메타 정보(스냅샷제거 event와 분리)
     meta = models.JSONField(default=dict, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)

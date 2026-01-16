@@ -5,6 +5,8 @@ from django.db import models
 
 
 class Card(models.Model):
+    objects: models.Manager["Card"]
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
