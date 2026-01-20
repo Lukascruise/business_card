@@ -1,24 +1,40 @@
-# Environment / secrets
-envs/
+# Environment / Secrets
 .env
+.env.*
+!envs/.env.example
+envs/*.env
+envs/*.env.*
 
 # Virtual environments
 .venv/
 
-# Python
+# Python & Tools
 __pycache__/
 *.py[cod]
 *.pyo
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.dmypy.json
+.python-version
 
-# Django
-db.sqlite3
+# [uv]
+# uv.lock 1인개발이기에 추가해도됨
 
-# Logs
-*.log
+# Django & Media
+db.sqlite3              # PostgreSQL 사용 예정
+media/
+static/
+staticfiles/
 
-# OS
+# Testing & Coverage
+.coverage
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+
+# OS & IDE
 .DS_Store
-
-# IDE
 .vscode/
 .idea/
