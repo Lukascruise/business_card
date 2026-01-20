@@ -1,0 +1,140 @@
+name: Discord Notifications
+
+on:
+  pull_request:
+    types: [opened, review_requested, closed]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      # PR 생성 알림
+      - name: Notify on PR Opened
+        if: github.event.action == 'opened'
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          ADDITIONS: ${{ github.event.pull_request.additions }}
+          DELETIONS: ${{ github.event.pull_request.deletions }}
+          CREATED_AT: ${{ github.event.pull_request.created_at }}
+        run: |
+          curl -H "Content-Type: application/json" \
+              -X POST \
+              -d "{
+                \"embeds\": [{
+                  \"title\": \"🆕 새로운 PR이 생성되었습니다!\",
+                  \"description\": \"[$PR_TITLE]($PR_URL)\",
+                  \"color\": 3447003,
+                  \"fields\": [
+                    { \"name\": \"👤 작성자\", \"value\": \"$PR_AUTHOR\", \"inline\": true },
+                    { \"name\": \"🌿 브랜치\", \"value\": \"\`$HEAD_REF\` → \`$BASE_REF\`\", \"inline\": true },
+                    { \"name\": \"📊 변경사항\", \"value\": \"+$ADDITIONS -$DELETIONS\", \"inline\": true }
+                  ],
+                  \"timestamp\": \"$CREATED_AT\"
+                }]
+              }" \
+              ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      # 리뷰 요청 알림
+      - name: Mention Reviewers
+        if: github.event.action == 'review_requested'
+        env:
+          REVIEWERS_JSON: ${{ toJSON(github.event.pull_request.requested_reviewers) }}
+          CURRENT_REVIEWER: ${{ github.event.requested_reviewer.login }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          CHANGED_FILES: ${{ github.event.pull_request.changed_files }}
+          ADDITIONS: ${{ github.event.pull_request.additions }}
+          DELETIONS: ${{ github.event.pull_request.deletions }}
+        run: |
+          FIRST_REVIEWER=$(echo "$REVIEWERS_JSON" | jq -r '.[0].login // empty')
+
+          if [ "$CURRENT_REVIEWER" = "$FIRST_REVIEWER" ] || [ -z "$FIRST_REVIEWER" ]; then
+            MENTIONS=""
+            for login in $(echo "$REVIEWERS_JSON" | jq -r '.[] | .login'); do
+              case "$login" in
+                "Lukascruise") MENTIONS="$MENTIONS <@719200574096015391>" ;;
+                *) MENTIONS="$MENTIONS @$login" ;;
+              esac
+            done
+
+            curl -H "Content-Type: application/json" \
+                 -X POST \
+                 -d "{
+                   \"content\": \"🔍 **리뷰 요청이 도착했습니다!** $MENTIONS\",
+                   \"embeds\": [{
+                     \"title\": \"리뷰를 부탁드립니다! 👀\",
+                     \"description\": \"[$PR_TITLE]($PR_URL)\",
+                     \"color\": 16776960,
+                     \"fields\": [
+                       { \"name\": \"👤 PR 작성자\", \"value\": \"$PR_AUTHOR\", \"inline\": true },
+                       { \"name\": \"📁 변경사항\", \"value\": \"파일 $CHANGED_FILES개 | +$ADDITIONS -$DELETIONS\", \"inline\": false }
+                     ]
+                   }]
+                 }" \
+                 ${{ secrets.DISCORD_WEBHOOK_URL }}
+          fi
+
+      # 리뷰 승인 알림
+      - name: Notify on Review Approved
+        if: github.event.review.state == 'approved'
+        env:
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          REVIEWER: ${{ github.event.review.user.login }}
+        run: |
+          case "$PR_AUTHOR" in
+            "Lukascruise") FINAL_MENTION="<@719200574096015391>" ;;
+            *) FINAL_MENTION="@$PR_AUTHOR" ;;
+          esac
+
+          curl -H "Content-Type: application/json" \
+              -X POST \
+              -d "{
+                \"content\": \"👍 **리뷰가 승인되었습니다!** $FINAL_MENTION\",
+                \"embeds\": [{
+                  \"title\": \"✅ 리뷰 승인 완료!\",
+                  \"description\": \"[$PR_TITLE]($PR_URL)\",
+                  \"color\": 65280,
+                  \"fields\": [
+                    { \"name\": \"👀 리뷰어\", \"value\": \"$REVIEWER\", \"inline\": true }
+                  ]
+                }]
+              }" \
+              ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      # 변경 사항 요청 알림
+      - name: Notify on Changes Requested
+        if: github.event.review.state == 'changes_requested'
+        env:
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          REVIEWER: ${{ github.event.review.user.login }}
+        run: |
+          case "$PR_AUTHOR" in
+            "Lukascruise") FINAL_MENTION="<@719200574096015391>" ;;
+            *) FINAL_MENTION="@$PR_AUTHOR" ;;
+          esac
+
+          curl -H "Content-Type: application/json" \
+              -X POST \
+              -d "{
+                \"content\": \"🔄 **변경사항이 요청되었습니다!** $FINAL_MENTION\",
+                \"embeds\": [{
+                  \"title\": \"❗ 수정이 필요합니다\",
+                  \"description\": \"[$PR_TITLE]($PR_URL)\",
+                  \"color\": 16776960,
+                  \"fields\": [
+                    { \"name\": \"👀 리뷰어\", \"value\": \"$REVIEWER\", \"inline\": true }
+                  ]
+                }]
+              }" \
+              ${{ secrets.DISCORD_WEBHOOK_URL }}
