@@ -11,7 +11,7 @@ from django_app.card.models.card_snapshot import CardSnapshot
 
 class CardService:
     @staticmethod
-    def validate_phone_format(phone: str):
+    def validate_phone_format(phone: str | None):
         if phone:
             phone_regex = r"^010-[2-9]\d{3}-\d{4}$"
             if not re.match(phone_regex, phone):
@@ -19,7 +19,7 @@ class CardService:
 
     @staticmethod
     @transaction.atomic
-    def create_card(owner, card_data: dict, image_key: str = None) -> Card:
+    def create_card(owner, card_data: dict, image_key: str | None = None) -> Card:
         CardService.validate_phone_format(card_data.get("phone"))
 
         card = Card.objects.create(owner=owner, **card_data)
