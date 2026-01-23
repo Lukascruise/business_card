@@ -19,11 +19,12 @@ services:
              python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
+      - /app/.venv
     ports:
       - "8000:8000"  # Django (Admin/Auth)
       - "8001:8001"  # FastAPI (OCR/QR) - 별도 실행 시
     env_file:
-      - .env
+      - ./envs/.local.env
     depends_on:
       - db
 

@@ -22,7 +22,6 @@ __pycache__/
 # uv.lock 1인개발이기에 추가해도됨
 
 # Django & Media
-db.sqlite3              # PostgreSQL 사용 예정
 media/
 static/
 staticfiles/

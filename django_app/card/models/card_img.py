@@ -3,7 +3,7 @@ import uuid
 from django.conf import settings
 from django.db import models
 
-from django_app.models.card import Card
+from django_app.card.models.card import Card
 
 
 class CardImage(models.Model):
