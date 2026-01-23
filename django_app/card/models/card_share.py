@@ -4,8 +4,8 @@ import uuid
 from django.db import models
 from django.utils import timezone
 
-from django_app.models.card import Card
-from django_app.models.card_snapshot import CardSnapshot
+from django_app.card.models.card import Card
+from django_app.card.models.card_snapshot import CardSnapshot
 
 
 def generate_access_key() -> str:

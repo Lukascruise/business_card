@@ -1,3 +1,22 @@
+[Request Flow]
+URL
+ → View
+   → Permission
+   → Serializer (input)
+   → Service
+     → Model
+     → Utils
+   → Serializer (output)
+ → Response
+
+현재 MVP 단계에서는 단일 스토리지(R2)만 사용하므로
+Storage Port / Adapter 패턴을 의도적으로 제거
+
+다음 조건 중 하나라도 충족되면 Port를 도입
+- S3 + R2 병행
+- Local storage fallback
+- Storage 단위 테스트 필요
+
 erDiagram
     USER {
         uuid id PK

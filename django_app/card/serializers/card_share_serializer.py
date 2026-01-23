@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from django_app.models.card_share import CardShareToken
+from django_app.card.models.card_share import CardShareToken
 
 
 class CardShareTokenSerializer(serializers.ModelSerializer):
