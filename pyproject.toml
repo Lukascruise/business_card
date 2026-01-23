@@ -13,6 +13,7 @@ dependencies = [
     "pydantic[email]>=2.7",
     "boto3>=1.35",
     "mypy-boto3-s3>=1.35",
+    "psycopg[binary]>=3.3.2",
 ]
 
 [dependency-groups]

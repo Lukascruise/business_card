@@ -12,4 +12,4 @@ COPY . .
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["/app/.venv/bin/python", "manage.py", "runserver", "0.0.0.0:8000"]

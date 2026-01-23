@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 
-from django_app.models.card import Card
+from django_app.card.models.card import Card
 
 
 class CardEvent(models.Model):
