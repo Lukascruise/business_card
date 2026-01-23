@@ -22,12 +22,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-slj2vqde)wndbpr@67@4me02-=n(b^)84_-33ggjj8-jx^pdq#"
+SECRET_KEY = os.getenv(
+    "SECRET_KEY", "django-insecure-slj2vqde)wndbpr@67@4me02-=n(b^)84_-33ggjj8-jx^pdq#"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS: list[str] = []
+ALLOWED_HOSTS: list[str] = os.getenv("ALLOWED_HOSTS", "").split(",")
 
 
 # Application definition
@@ -39,6 +41,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "django_app",
 ]
 
 MIDDLEWARE = [
@@ -76,8 +80,14 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB", "business_card_db"),
+        "USER": os.getenv("POSTGRES_USER", "user"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "password"),
+        "HOST": os.getenv(
+            "POSTGRES_HOST", "db"
+        ),  # Docker Compose 서비스 이름 'db' 사용
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
     }
 }
 

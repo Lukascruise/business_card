@@ -2,10 +2,10 @@ from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from core.domain.errors import EMS, BusinessException
-from django_app.models.card_share import CardShareToken
-from django_app.permissions.share_permission import IsActiveToken
-from django_app.serializers.card_share_serializer import CardShareTokenSerializer
-from django_app.serializers.card_snapshot_serializer import CardSnapshotSerializer
+from django_app.card.models.card_share import CardShareToken
+from django_app.card.permissions.share_permission import IsActiveToken
+from django_app.card.serializers.card_share_serializer import CardShareTokenSerializer
+from django_app.card.serializers.card_snapshot_serializer import CardSnapshotSerializer
 
 
 class ShareTokenCreateView(CreateAPIView):

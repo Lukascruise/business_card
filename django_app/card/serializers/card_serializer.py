@@ -2,7 +2,7 @@ import re
 
 from rest_framework import serializers
 
-from django_app.models.card import Card
+from django_app.card.models.card import Card
 
 
 class CardSerializer(serializers.ModelSerializer):
