@@ -9,6 +9,8 @@ class ErrorCode(StrEnum):
     AUTH_INVALID_TOKEN = "AUTH.INVALID_TOKEN"
     R2_UPLOAD_FAILED = "IMG.R2_UPLOAD_FAILED"
     INTERNAL_SERVER_ERROR = "COMMON.INTERNAL_ERROR"
+    INVALID_IMAGE_EXTENSION = "IMG.INVALID_EXTENSION"
+    INVALID_PHONE_FORMAT = "CARD.INVALID_PHONE"
 
 
 class BusinessException(Exception):
@@ -39,6 +41,16 @@ class ErrorMessages:
         ErrorCode.R2_UPLOAD_FAILED,
         "이미지 업로드에 실패했습니다.",
         502,
+    )
+    INVALID_IMAGE_EXTENSION = (
+        ErrorCode.INVALID_IMAGE_EXTENSION,
+        "허용되지 않는 이미지 확장자입니다.",
+        400,
+    )
+    INVALID_PHONE_FORMAT = (
+        ErrorCode.INVALID_PHONE_FORMAT,
+        "전화번호 형식이 올바르지 않습니다.",
+        400,
     )
 
 
