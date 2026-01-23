@@ -1,0 +1,10 @@
+from typing import Any, Protocol
+
+
+class StoragePresignerPort(Protocol):
+    """Mypy 에러 해결을 위한 스토리지 인터페이스 정의"""
+
+    def generate_presigned_url(self, key: str, expires_in: int = 3600) -> str: ...
+    def upload_file(self, file: Any, key: str) -> str: ...
+    def delete_file(self, key: str) -> None:  # delete_file도 추가하는 것이 무결함
+        ...
