@@ -6,8 +6,6 @@ from django_app.card.models.card import Card
 
 
 class CardSnapshot(models.Model):
-    objects: models.Manager["CardSnapshot"]
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     card = models.ForeignKey(

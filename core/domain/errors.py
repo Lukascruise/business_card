@@ -11,6 +11,8 @@ class ErrorCode(StrEnum):
     INTERNAL_SERVER_ERROR = "COMMON.INTERNAL_ERROR"
     INVALID_IMAGE_EXTENSION = "IMG.INVALID_EXTENSION"
     INVALID_PHONE_FORMAT = "CARD.INVALID_PHONE"
+    COLLECTION_CANNOT_COLLECT_OWN = "COLLECTION.CANNOT_COLLECT_OWN"
+    COLLECTION_ALREADY_COLLECTED = "COLLECTION.ALREADY_COLLECTED"
 
 
 class BusinessException(Exception):
@@ -52,6 +54,24 @@ class ErrorMessages:
         "전화번호 형식이 올바르지 않습니다.",
         400,
     )
+    COLLECTION_CANNOT_COLLECT_OWN = (
+        ErrorCode.COLLECTION_CANNOT_COLLECT_OWN,
+        "자기 명함은 수집할 수 없습니다.",
+        400,
+    )
+    COLLECTION_ALREADY_COLLECTED = (
+        ErrorCode.COLLECTION_ALREADY_COLLECTED,
+        "이미 수집한 명함입니다.",
+        400,
+    )
 
 
 EMS = ErrorMessages
+
+
+class ValidationMessages:
+    """시리얼라이저 등에서 쓰는 검증 메시지 (ErrorMessages와 통일)"""
+
+    PHONE_INVALID = EMS.INVALID_PHONE_FORMAT[1]
+    EMAIL_ALREADY_USED = "이미 사용 중인 이메일입니다."
+    EXPIRES_AT_FUTURE = "만료 시각은 미래여야 합니다."

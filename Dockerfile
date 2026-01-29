@@ -6,10 +6,11 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-cache
 
 FROM python:3.13-slim
+COPY --from=builder /bin/uv /bin/uvx /bin/
 WORKDIR /app
 COPY --from=builder /app/.venv /app/.venv
 COPY . .
 
-ENV PATH="/app/.venv/bin:$PATH"
+ENV PATH="/bin:/app/.venv/bin:$PATH"
 
 CMD ["/app/.venv/bin/python", "manage.py", "runserver", "0.0.0.0:8000"]

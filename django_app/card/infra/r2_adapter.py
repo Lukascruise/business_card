@@ -3,6 +3,7 @@ from typing import Any, cast
 import boto3
 from django.conf import settings
 
+from core.constants import PRESIGNED_URL_EXPIRES_IN
 from core.domain.storage.storage import StoragePresignerPort
 
 
@@ -22,10 +23,30 @@ class R2StorageAdapter(StoragePresignerPort):
             region_name="auto",
         )
 
-    def generate_presigned_url(self, key: str, expires_in: int = 3600) -> str:
+    def generate_presigned_url(
+        self, key: str, expires_in: int = PRESIGNED_URL_EXPIRES_IN
+    ) -> str:
         url = self.s3.generate_presigned_url(
             ClientMethod="get_object",
             Params={"Bucket": self.bucket_name, "Key": key.lstrip("/")},
+            ExpiresIn=expires_in,
+        )
+        return cast(str, url)
+
+    def generate_presigned_put_url(
+        self,
+        key: str,
+        *,
+        expires_in: int = PRESIGNED_URL_EXPIRES_IN,
+        content_type: str | None = None,
+    ) -> str:
+        params: dict[str, Any] = {"Bucket": self.bucket_name, "Key": key.lstrip("/")}
+        if content_type:
+            params["ContentType"] = content_type
+
+        url = self.s3.generate_presigned_url(
+            ClientMethod="put_object",
+            Params=params,
             ExpiresIn=expires_in,
         )
         return cast(str, url)

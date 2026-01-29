@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-"""Django's command-line utility for administrative tasks."""
 import os
 import sys
 
@@ -11,9 +9,9 @@ def main():
         from django.core.management import execute_from_command_line
     except ImportError as exc:
         raise ImportError(
-            "Couldn't import Django. Are you sure it's installed and "
-            "available on your PYTHONPATH environment variable? Did you "
-            "forget to activate a virtual environment?"
+            "장고안깔림"
+            "도커 컨테이너 안에서 실행하세요 (docker compose exec web ...)\n"
+            "로컬이라면 uv sync하고 가상환경(source .venv/bin/activate) 켜세요"
         ) from exc
     execute_from_command_line(sys.argv)
 

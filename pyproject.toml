@@ -10,10 +10,12 @@ requires-python = ">=3.12"
 dependencies = [
     "django>=5.1",
     "djangorestframework>=3.15",
+    "drf-spectacular>=0.27.0",
     "pydantic[email]>=2.7",
     "boto3>=1.35",
     "mypy-boto3-s3>=1.35",
     "psycopg[binary]>=3.3.2",
+    "python-dotenv>=1.2.1",
 ]
 
 [dependency-groups]
@@ -27,6 +29,12 @@ dev = [
 [tool.django-stubs]
 django_settings_module = "config.settings"
 strict_settings = false
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+reportMissingImports = "none"
+reportMissingModuleSource = "none"
 
 [tool.ruff]
 line-length = 88

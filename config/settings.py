@@ -14,22 +14,40 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+env_path = BASE_DIR / "envs" / ".local.env"
+load_dotenv(dotenv_path=env_path)
+
+
+def _require_env(key: str) -> str:
+    v = os.getenv(key)
+    if not (v and str(v).strip()):
+        raise ImproperlyConfigured(f"Required environment variable: {key}")
+    return str(v).strip()
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv(
-    "SECRET_KEY", "django-insecure-slj2vqde)wndbpr@67@4me02-=n(b^)84_-33ggjj8-jx^pdq#"
-)
+SECRET_KEY = _require_env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "True") == "True"
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS: list[str] = os.getenv("ALLOWED_HOSTS", "").split(",")
+_allowed = os.getenv("ALLOWED_HOSTS", "").strip()
+_ALLOWED_HOSTS_DEFAULT = ["localhost", "127.0.0.1", "0.0.0.0"]
+if not _allowed and not DEBUG:
+    raise ImproperlyConfigured("ALLOWED_HOSTS required when DEBUG=False")
+ALLOWED_HOSTS: list[str] = (
+    [h.strip() for h in _allowed.split(",") if h.strip()]
+    if _allowed
+    else _ALLOWED_HOSTS_DEFAULT
+)
 
 
 # Application definition
@@ -42,7 +60,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "django_app",
+    "rest_framework.authtoken",
+    "drf_spectacular",
+    "django_app.user",
+    "django_app.card",
 ]
 
 MIDDLEWARE = [
@@ -81,13 +102,11 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB", "business_card_db"),
-        "USER": os.getenv("POSTGRES_USER", "user"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "password"),
-        "HOST": os.getenv(
-            "POSTGRES_HOST", "db"
-        ),  # Docker Compose 서비스 이름 'db' 사용
-        "PORT": os.getenv("POSTGRES_PORT", "5432"),
+        "NAME": _require_env("POSTGRES_DB"),
+        "USER": _require_env("POSTGRES_USER"),
+        "PASSWORD": _require_env("POSTGRES_PASSWORD"),
+        "HOST": _require_env("POSTGRES_HOST"),
+        "PORT": _require_env("POSTGRES_PORT"),
     }
 }
 
@@ -128,9 +147,26 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+AUTH_USER_MODEL = "user.User"
 
-R2_ACCOUNT_ID = os.getenv("R2_ACCOUNT_ID", "default")
-R2_ACCESS_KEY_ID = os.getenv("R2_ACCESS_KEY_ID", "default")
-R2_SECRET_ACCESS_KEY = os.getenv("R2_SECRET_ACCESS_KEY", "default")
-R2_BUCKET_NAME = os.getenv("R2_BUCKET_NAME", "default")
-CDN_BASE_URL = os.getenv("CDN_BASE_URL", "https://pub-xxx.r2.dev")
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "EXCEPTION_HANDLER": "core.services.drf_exception_handler.custom_exception_handler",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Business Card API",
+    "DESCRIPTION": "MVP 명함 서비스 API",
+    "VERSION": "0.1.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
+
+
+R2_ACCOUNT_ID = _require_env("R2_ACCOUNT_ID")
+R2_ACCESS_KEY_ID = _require_env("R2_ACCESS_KEY_ID")
+R2_SECRET_ACCESS_KEY = _require_env("R2_SECRET_ACCESS_KEY")
+R2_BUCKET_NAME = _require_env("R2_BUCKET_NAME")
+CDN_BASE_URL = _require_env("CDN_BASE_URL")

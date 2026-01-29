@@ -7,8 +7,6 @@ from django_app.card.models.card import Card
 
 
 class CardImage(models.Model):
-    objects: models.Manager["CardImage"]
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     card = models.ForeignKey(Card, on_delete=models.CASCADE, related_name="images")
 
