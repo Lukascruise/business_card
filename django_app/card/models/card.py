@@ -5,8 +5,6 @@ from django.db import models
 
 
 class Card(models.Model):
-    objects: models.Manager["Card"]
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
@@ -15,6 +13,7 @@ class Card(models.Model):
     position = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
+    bio = models.TextField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

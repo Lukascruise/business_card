@@ -13,8 +13,6 @@ def generate_access_key() -> str:
 
 
 class CardShareToken(models.Model):
-    objects: models.Manager["CardShareToken"]
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
 
     card = models.ForeignKey(

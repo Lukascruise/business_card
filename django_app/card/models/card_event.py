@@ -6,8 +6,6 @@ from django_app.card.models.card import Card
 
 
 class CardEvent(models.Model):
-    objects: models.Manager["CardEvent"]
-
     class EventType(models.TextChoices):
         CREATE = "CREATE", "Created"
         UPDATE = "UPDATE", "Updated"

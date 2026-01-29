@@ -27,6 +27,19 @@ jobs:
 
     env:
       DATABASE_URL: postgres://user:password@localhost:5432/business_card_db
+      SECRET_KEY: ci-secret-key-for-testing-only
+      DEBUG: "True"
+      ALLOWED_HOSTS: localhost,127.0.0.1
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: business_card_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      R2_ACCOUNT_ID: ci
+      R2_ACCESS_KEY_ID: ci
+      R2_SECRET_ACCESS_KEY: ci
+      R2_BUCKET_NAME: ci
+      CDN_BASE_URL: https://example.com
       DJANGO_SETTINGS_MODULE: config.settings
 
     steps:
