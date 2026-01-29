@@ -1,15 +1,24 @@
-# 로컬 가상환경 제외 (가장 중요)
+# 로컬 가상환경 제외 (빌드 시 .venv 덮어쓰기 방지)
 .venv/
 venv/
 env/
 
-# 파이썬 캐시 파일 제외
+# 파이썬 캐시
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# 기타 불필요한 파일
+# 환경·민감 파일 (컨테이너엔 env_file 로 주입)
+envs/
+.env*
+
+# 기타
 .git/
 .gitignore
+.dockerignore
 .DS_Store
+*.md
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
