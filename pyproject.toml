@@ -16,6 +16,7 @@ dependencies = [
     "mypy-boto3-s3>=1.35",
     "psycopg[binary]>=3.3.2",
     "python-dotenv>=1.2.1",
+    "dj-database-url>=3.1.0",
 ]
 
 [dependency-groups]
