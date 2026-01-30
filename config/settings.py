@@ -23,8 +23,8 @@ env_path = BASE_DIR / "envs" / ".local.env"
 load_dotenv(dotenv_path=env_path)
 
 
-def _require_env(key: str) -> str:
-    v = os.getenv(key)
+def _require_env(key: str, default: str | None = None) -> str:
+    v = os.getenv(key, default)
     if not (v and str(v).strip()):
         raise ImproperlyConfigured(f"Required environment variable: {key}")
     return str(v).strip()
@@ -35,7 +35,11 @@ def _require_env(key: str) -> str:
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = _require_env("SECRET_KEY")
-ADMIN_URL = _require_env("ADMIN_URL")
+# ADMIN_URL: 배포 시 반드시 설정. 로컬/CI에서만 디폴트 허용.
+if os.getenv("CI") == "true" or os.getenv("DEBUG", "").lower() == "true":
+    ADMIN_URL = _require_env("ADMIN_URL", default="admin-secret-path")
+else:
+    ADMIN_URL = _require_env("ADMIN_URL")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
