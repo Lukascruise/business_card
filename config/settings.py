@@ -20,7 +20,9 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 env_path = BASE_DIR / "envs" / ".local.env"
-load_dotenv(dotenv_path=env_path)
+# 배포(Render 등)에서는 .local.env 로드하지 않음. DJANGO_ENV=production 설정 시 환경 변수만 사용.
+if os.getenv("DJANGO_ENV") != "production" and env_path.exists():
+    load_dotenv(dotenv_path=env_path)
 
 
 def _require_env(key: str, default: str | None = None) -> str:
