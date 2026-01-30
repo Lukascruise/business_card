@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from pathlib import Path
 
+import dj_database_url
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
@@ -105,17 +106,27 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": _require_env("POSTGRES_DB"),
-        "USER": _require_env("POSTGRES_USER"),
-        "PASSWORD": _require_env("POSTGRES_PASSWORD"),
-        "HOST": _require_env("POSTGRES_HOST"),
-        "PORT": _require_env("POSTGRES_PORT"),
+# Render 등에서 DATABASE_URL 주입 시 사용. 없으면 POSTGRES_* 개별 변수 사용.
+_database_url = os.getenv("DATABASE_URL")
+if _database_url:
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=_database_url,
+            conn_max_age=600,
+            ssl_require=os.getenv("DJANGO_ENV") == "production",
+        )
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": _require_env("POSTGRES_DB"),
+            "USER": _require_env("POSTGRES_USER"),
+            "PASSWORD": _require_env("POSTGRES_PASSWORD"),
+            "HOST": _require_env("POSTGRES_HOST"),
+            "PORT": _require_env("POSTGRES_PORT"),
+        }
+    }
 
 
 # Password validation

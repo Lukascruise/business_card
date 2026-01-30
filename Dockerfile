@@ -13,4 +13,5 @@ COPY . .
 
 ENV PATH="/bin:/app/.venv/bin:$PATH"
 
-CMD ["/app/.venv/bin/python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Render: PORT 주입. 로컬 Docker: 미설정 시 8000 사용.
+CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000}"]
