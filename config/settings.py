@@ -35,6 +35,7 @@ def _require_env(key: str) -> str:
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = _require_env("SECRET_KEY")
+ADMIN_URL = _require_env("ADMIN_URL")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
