@@ -10,9 +10,8 @@ COPY --from=builder /bin/uv /bin/uvx /bin/
 WORKDIR /app
 COPY --from=builder /app/.venv /app/.venv
 COPY . .
-# 캐시된 .venv에 gunicorn 반영 (Render 빌드 캐시로 COPY .venv가 예전 상태일 때 대비)
+# 캐시된 .venv에 gunicorn 등 새 의존성 반영 (Render 빌드 캐시 대비)
 RUN /bin/uv sync --frozen --no-cache
-RUN /app/.venv/bin/python -m pip install --no-cache-dir gunicorn
 
 ENV PATH="/bin:/app/.venv/bin:$PATH"
 
