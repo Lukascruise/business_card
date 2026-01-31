@@ -13,7 +13,7 @@ def trigger_error(request):
 
 
 urlpatterns = [
-    path("sentry-debug/", trigger_error),  # type: ignore[arg-type]
+    path("sentry-debug/", trigger_error),  # pyright: ignore
     path(f"{settings.ADMIN_URL}/", admin.site.urls),
     path("api/v1/cards/", include("django_app.card.urls.url")),
     path("v1/", include("config.v1_urls")),
