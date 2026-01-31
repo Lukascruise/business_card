@@ -18,6 +18,20 @@ import dj_database_url
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
+# Sentry: SENTRY_DSN 설정 시에만 초기화 (Render 등 로그 제한 환경에서 500 추적)
+_sentry_dsn = os.getenv("SENTRY_DSN", "").strip()
+if _sentry_dsn:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=_sentry_dsn,
+        integrations=[DjangoIntegration()],
+        environment=os.getenv("DJANGO_ENV", "development"),
+        traces_sample_rate=0,
+        send_default_pii=False,
+    )
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 env_path = BASE_DIR / "envs" / ".local.env"

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import re
 from typing import Any
 
@@ -79,6 +80,10 @@ def custom_exception_handler(exc: Exception, context: dict[str, Any] | None):
         return response
 
     if isinstance(exc, ProgrammingError):
+        if os.getenv("SENTRY_DSN"):
+            import sentry_sdk
+
+            sentry_sdk.capture_exception(exc)
         response = Response(
             {
                 "success": False,
@@ -95,6 +100,10 @@ def custom_exception_handler(exc: Exception, context: dict[str, Any] | None):
 
     response = drf_exception_handler(exc, context)
     if response is None:
+        if os.getenv("SENTRY_DSN"):
+            import sentry_sdk
+
+            sentry_sdk.capture_exception(exc)
         response = Response(
             {
                 "success": False,
@@ -106,5 +115,9 @@ def custom_exception_handler(exc: Exception, context: dict[str, Any] | None):
             },
             status=500,
         )
+    elif response.status_code >= 500 and os.getenv("SENTRY_DSN"):
+        import sentry_sdk
+
+        sentry_sdk.capture_exception(exc)
     _add_cors_headers_to_response(response, context)
     return response
