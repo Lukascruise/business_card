@@ -7,6 +7,8 @@ class ErrorCode(StrEnum):
 
     CARD_NOT_FOUND = "CARD.NOT_FOUND"
     AUTH_INVALID_TOKEN = "AUTH.INVALID_TOKEN"
+    AUTH_EMAIL_ALREADY_USED = "AUTH.EMAIL_ALREADY_USED"
+    AUTH_INVALID_CREDENTIALS = "AUTH.INVALID_CREDENTIALS"
     R2_UPLOAD_FAILED = "IMG.R2_UPLOAD_FAILED"
     INTERNAL_SERVER_ERROR = "COMMON.INTERNAL_ERROR"
     INVALID_IMAGE_EXTENSION = "IMG.INVALID_EXTENSION"
@@ -37,6 +39,16 @@ class ErrorMessages:
     AUTH_INVALID_TOKEN = (
         ErrorCode.AUTH_INVALID_TOKEN,
         "인증 정보가 유효하지 않습니다.",
+        401,
+    )
+    AUTH_EMAIL_ALREADY_USED = (
+        ErrorCode.AUTH_EMAIL_ALREADY_USED,
+        "이미 사용 중인 이메일입니다.",
+        409,
+    )
+    AUTH_INVALID_CREDENTIALS = (
+        ErrorCode.AUTH_INVALID_CREDENTIALS,
+        "이메일 또는 비밀번호가 올바르지 않습니다.",
         401,
     )
     R2_UPLOAD_FAILED = (
@@ -74,4 +86,8 @@ class ValidationMessages:
 
     PHONE_INVALID = EMS.INVALID_PHONE_FORMAT[1]
     EMAIL_ALREADY_USED = "이미 사용 중인 이메일입니다."
+    EMAIL_REQUIRED = "이메일을 입력해 주세요."
+    EMAIL_INVALID_FORMAT = "이메일 형식이 올바르지 않습니다."
+    PASSWORD_REQUIRED = "비밀번호를 입력해 주세요."
+    PASSWORD_MIN_LENGTH = "비밀번호는 8자 이상이어야 합니다."
     EXPIRES_AT_FUTURE = "만료 시각은 미래여야 합니다."
