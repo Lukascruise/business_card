@@ -19,5 +19,6 @@ RUN /bin/uv pip install gunicorn
 
 ENV PATH="/bin:/app/.venv/bin:$PATH"
 
-# 렌더 무료 플랜: Pre-Deploy/Shell 없음 컨테이너 시작 시 migrate 후 gunicorn
-CMD ["sh", "-c", "uv run python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000}"]
+# Render Docker Command가 CMD를 덮어쓸 때 공백으로 쪼개져 migrate에 인자가 넘어가는 문제 방지
+RUN chmod +x /app/docker-entrypoint.sh
+CMD ["./docker-entrypoint.sh"]
