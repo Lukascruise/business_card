@@ -31,6 +31,12 @@ class CardSerializer(serializers.ModelSerializer):
 
     owner_id = serializers.UUIDField(source="owner.id", read_only=True)
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        first_img = instance.images.first()
+        data["image_url"] = first_img.image_url if first_img else None
+        return data
+
     def validate_phone(self, value):
         if value and not re.match(PHONE_REGEX, value):
             raise serializers.ValidationError(ValidationMessages.PHONE_INVALID)
