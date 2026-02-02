@@ -96,6 +96,7 @@ class CardTokenCreateView(APIView):
 
         return Response(
             {
+                ApiKeys.TOKEN_ID: str(token.id),
                 ApiKeys.SHARE_TOKEN: token.access_key,
                 ApiKeys.EXPIRES_AT: token.expires_at,
             },
