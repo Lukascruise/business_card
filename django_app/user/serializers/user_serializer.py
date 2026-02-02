@@ -33,6 +33,21 @@ class SignupResponseSerializer(serializers.Serializer):
     user_id = serializers.CharField()
 
 
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField(
+        error_messages={
+            "required": ValidationMessages.EMAIL_REQUIRED,
+            "invalid": ValidationMessages.EMAIL_INVALID_FORMAT,
+        }
+    )
+    password = serializers.CharField(
+        write_only=True,
+        error_messages={
+            "required": ValidationMessages.PASSWORD_REQUIRED,
+        },
+    )
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     user_id = serializers.UUIDField(source="id", read_only=True)
     name = serializers.CharField(source="nickname", required=False, allow_blank=True)
