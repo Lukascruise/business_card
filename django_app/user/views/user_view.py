@@ -11,6 +11,7 @@ from core.constants import ApiKeys
 from django_app.user.models import User
 from django_app.user.permissions.auth_permission import IsNotAuthenticated
 from django_app.user.serializers.user_serializer import (
+    LoginSerializer,
     SignupResponseSerializer,
     SignupSerializer,
     UserProfileSerializer,
@@ -44,6 +45,35 @@ class SignupView(APIView):
                 ApiKeys.USER_ID: str(user.pk),
             },
             status=status.HTTP_201_CREATED,
+        )
+
+
+@extend_schema(
+    request=LoginSerializer,
+    responses={200: SignupResponseSerializer},
+    tags=["auth"],
+)
+class LoginView(APIView):
+    """로그인 (이메일 + 비밀번호 → 토큰 발급)"""
+
+    permission_classes = [IsNotAuthenticated]
+
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = cast(dict[str, str], serializer.validated_data)
+
+        user, token = AuthService.login(
+            email=data["email"],
+            password=data["password"],
+        )
+
+        return Response(
+            {
+                ApiKeys.ACCESS_TOKEN: token.key,
+                ApiKeys.USER_ID: str(user.pk),
+            },
+            status=status.HTTP_200_OK,
         )
 
 
