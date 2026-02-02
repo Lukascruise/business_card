@@ -16,6 +16,8 @@ COPY . .
 RUN /bin/uv sync --frozen --no-cache
 # 빌드 캐시로 .venv에 gunicorn이 빠지는 경우 방지 (uv venv에는 pip 없음 → uv 사용)
 RUN /bin/uv pip install gunicorn
+# gunicorn 미찾음(exit 127) 방지: 설치 위치 확인 후 entrypoint에서 절대경로로 실행
+RUN test -x /app/.venv/bin/gunicorn || (echo "gunicorn not found in venv" && exit 1)
 
 ENV PATH="/bin:/app/.venv/bin:$PATH"
 
