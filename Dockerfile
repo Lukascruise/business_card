@@ -19,4 +19,5 @@ RUN /bin/uv pip install gunicorn
 
 ENV PATH="/bin:/app/.venv/bin:$PATH"
 
-CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000}"]
+# 렌더 무료 플랜: Pre-Deploy/Shell 없음 컨테이너 시작 시 migrate 후 gunicorn
+CMD ["sh", "-c", "uv run python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000}"]
