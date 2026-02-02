@@ -19,6 +19,7 @@ RUN /bin/uv pip install gunicorn
 
 ENV PATH="/bin:/app/.venv/bin:$PATH"
 
-# Render Docker Command가 CMD를 덮어쓸 때 공백으로 쪼개져 migrate에 인자가 넘어가는 문제 방지
+# ENTRYPOINT 고정 → Render Docker Command를 비우면 이 스크립트만 실행. gunicorn은 uv pip install로 반드시 설치됨.
 RUN chmod +x /app/docker-entrypoint.sh
-CMD ["./docker-entrypoint.sh"]
+ENTRYPOINT ["./docker-entrypoint.sh"]
+CMD []
