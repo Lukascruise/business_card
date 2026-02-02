@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-import json
 import os
 import re
-from pathlib import Path
 from typing import Any
 
 from django.conf import settings
@@ -121,30 +119,5 @@ def custom_exception_handler(exc: Exception, context: dict[str, Any] | None):
         import sentry_sdk
 
         sentry_sdk.capture_exception(exc)
-    # #region agent log
-    if response and response.status_code == 400:
-        _log_path = Path(settings.BASE_DIR) / ".cursor" / "debug.log"
-        try:
-            payload = {
-                "sessionId": "debug-session",
-                "runId": "run1",
-                "hypothesisId": "D",
-                "location": "core/services/drf_exception_handler.py",
-                "message": "400 from exception handler",
-                "data": {
-                    "exc_type": type(exc).__name__,
-                    "path": getattr(
-                        context.get("request") if context else None, "path", None
-                    ),
-                },
-                "timestamp": __import__("time", fromlist=["time"]).time() * 1000,
-            }
-            _log_path.parent.mkdir(parents=True, exist_ok=True)
-            with open(_log_path, "a", encoding="utf-8") as _f:
-                _f.write(json.dumps(payload, ensure_ascii=False) + "\n")
-            print(f"[debug] {json.dumps(payload, ensure_ascii=False)}", flush=True)
-        except Exception:
-            pass
-    # #endregion
     _add_cors_headers_to_response(response, context)
     return response

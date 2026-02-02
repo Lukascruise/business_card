@@ -1,7 +1,3 @@
-import json
-from pathlib import Path
-
-from django.conf import settings
 from django.db.models import QuerySet
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status, viewsets
@@ -28,28 +24,6 @@ class CardViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self) -> QuerySet[Card]:  # pyright: ignore[reportIncompatibleMethodOverride]
         return Card.objects.filter(owner=self.request.user).order_by("-updated_at")
-
-    def retrieve(self, request, *args, **kwargs):
-        # #region agent log
-        _debug_log_path = Path(settings.BASE_DIR) / ".cursor" / "debug.log"
-        try:
-            payload = {
-                "sessionId": "debug-session",
-                "runId": "run1",
-                "hypothesisId": "B",
-                "location": "django_app/card/views/card_view.py:retrieve",
-                "message": "card retrieve entered",
-                "data": {"path": request.path, "pk": kwargs.get("pk")},
-                "timestamp": __import__("time", fromlist=["time"]).time() * 1000,
-            }
-            _debug_log_path.parent.mkdir(parents=True, exist_ok=True)
-            with open(_debug_log_path, "a", encoding="utf-8") as _f:
-                _f.write(json.dumps(payload, ensure_ascii=False) + "\n")
-            print(f"[debug] {json.dumps(payload, ensure_ascii=False)}", flush=True)
-        except Exception:
-            pass
-        # #endregion
-        return super().retrieve(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
