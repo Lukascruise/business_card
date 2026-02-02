@@ -73,7 +73,7 @@ ALLOWED_HOSTS: list[str] = (
 
 # CORS: Vercel 프론트 + 로컬 개발용
 CORS_ALLOWED_ORIGINS = [
-    "business-card-frontend-cdavb159p-lukascruises-projects.vercel.app",
+    "https://business-card-frontend-cdavb159p-lukascruises-projects.vercel.app",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
