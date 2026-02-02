@@ -73,11 +73,15 @@ ALLOWED_HOSTS: list[str] = (
 
 # CORS: Vercel 프론트 + 로컬 개발용
 CORS_ALLOWED_ORIGINS = [
-    "https://businesscardfrontend-flame.vercel.app",
+    "business-card-frontend-cdavb159p-lukascruises-projects.vercel.app",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
 
+# Vercel 배포 URL (커밋/수정할 때마다 바뀌는 주소 허용)
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://business-card-frontend(-[a-z0-9-]+)*\.vercel\.app$",
+]
 
 # Application definition
 
