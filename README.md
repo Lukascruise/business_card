@@ -1,6 +1,6 @@
-businesscardfrontend-flame.vercel.app
+https://businesscardfrontend-flame.vercel.app
 
-business-card-frontend-omega.vercel.app
+https://business-card-frontend-omega.vercel.app
 
 [Request Flow]
 URL
