@@ -1,5 +1,7 @@
 businesscardfrontend-flame.vercel.app
 
+business-card-frontend-omega.vercel.app
+
 [Request Flow]
 URL
  → View
