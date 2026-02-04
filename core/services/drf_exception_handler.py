@@ -68,6 +68,7 @@ def custom_exception_handler(exc: Exception, context: dict[str, Any] | None):
         return response
 
     if isinstance(exc, IntegrityError):
+        # PostgreSQL unique violation (23505); signup에서 이메일 중복 시 409 반환
         cause = getattr(exc, "__cause__", None)
         pgcode = getattr(cause, "pgcode", None) if cause else None
         if pgcode == "23505":
