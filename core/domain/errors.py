@@ -3,7 +3,7 @@ from typing import Any
 
 
 class ErrorCode(StrEnum):
-    """Mypy 에러를 해결하기 위한 시스템 통합 에러 코드"""
+    """시스템 통합 에러 코드. API 응답 error.code 및 프론트 표시용."""
 
     CARD_NOT_FOUND = "CARD.NOT_FOUND"
     AUTH_INVALID_TOKEN = "AUTH.INVALID_TOKEN"
@@ -15,6 +15,11 @@ class ErrorCode(StrEnum):
     INVALID_PHONE_FORMAT = "CARD.INVALID_PHONE"
     COLLECTION_CANNOT_COLLECT_OWN = "COLLECTION.CANNOT_COLLECT_OWN"
     COLLECTION_ALREADY_COLLECTED = "COLLECTION.ALREADY_COLLECTED"
+    COLLECTION_NOT_FOUND = "COLLECTION.NOT_FOUND"
+    # 핸들러에서 사용 (DB/공통)
+    DATA_CONFLICT = "COMMON.DATA_CONFLICT"
+    DB_SCHEMA_NOT_READY = "COMMON.DB_SCHEMA_NOT_READY"
+    VALIDATION_ERROR = "COMMON.VALIDATION_ERROR"
 
 
 class BusinessException(Exception):
@@ -74,6 +79,32 @@ class ErrorMessages:
     COLLECTION_ALREADY_COLLECTED = (
         ErrorCode.COLLECTION_ALREADY_COLLECTED,
         "이미 수집한 명함입니다.",
+        400,
+    )
+    COLLECTION_NOT_FOUND = (
+        ErrorCode.COLLECTION_NOT_FOUND,
+        "수집한 명함을 찾을 수 없습니다.",
+        404,
+    )
+    # 핸들러 전용 (IntegrityError, ProgrammingError, 기타)
+    INTERNAL_SERVER_ERROR = (
+        ErrorCode.INTERNAL_SERVER_ERROR,
+        "서버 오류가 발생했습니다.",
+        500,
+    )
+    DATA_CONFLICT = (
+        ErrorCode.DATA_CONFLICT,
+        "데이터 충돌이 발생했습니다.",
+        409,
+    )
+    DB_SCHEMA_NOT_READY = (
+        ErrorCode.DB_SCHEMA_NOT_READY,
+        "DB 스키마가 준비되지 않았습니다. 마이그레이션을 실행해 주세요.",
+        503,
+    )
+    VALIDATION_ERROR = (
+        ErrorCode.VALIDATION_ERROR,
+        "입력값을 확인해 주세요.",
         400,
     )
 
