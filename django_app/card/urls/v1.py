@@ -2,7 +2,10 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from django_app.card.views.card_view import CardViewSet
-from django_app.card.views.collection_view import CollectionCreateView
+from django_app.card.views.collection_view import (
+    CollectionCreateView,
+    CollectionDeleteView,
+)
 from django_app.card.views.media_view import PresignedUrlView
 from django_app.card.views.share_view import (
     CardTokenCreateView,
@@ -15,8 +18,14 @@ router.register("cards", CardViewSet, basename="card")
 
 urlpatterns = [
     path("media/presigned-url", PresignedUrlView.as_view(), name="presigned-url"),
-    # 상대 명함 저장
+    # 보관함: 목록/수집
     path("collections", CollectionCreateView.as_view(), name="collection-create"),
+    # 보관함: 삭제
+    path(
+        "collections/<uuid:collection_id>",
+        CollectionDeleteView.as_view(),
+        name="collection-delete",
+    ),
     # 보안 공유 토큰 발급
     path(
         "cards/<uuid:card_id>/tokens",
