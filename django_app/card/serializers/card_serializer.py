@@ -38,6 +38,11 @@ class CardSerializer(serializers.ModelSerializer):
         return data
 
     def validate_phone(self, value):
-        if value and not re.match(PHONE_REGEX, value):
+        if not value:
+            return ""
+        digits = re.sub(r"\D", "", value)
+        if not digits:
+            return ""
+        if not re.match(PHONE_REGEX, digits):
             raise serializers.ValidationError(ValidationMessages.PHONE_INVALID)
-        return value
+        return digits

@@ -59,7 +59,8 @@ class ShareService:
     @staticmethod
     def get_snapshot_by_access_key(*, access_key: str) -> CardSnapshot:
         share = (
-            CardShareToken.objects.select_related("snapshot")
+            CardShareToken.objects.select_related("snapshot", "snapshot__card")
+            .prefetch_related("snapshot__card__images")
             .filter(access_key=access_key)
             .first()
         )

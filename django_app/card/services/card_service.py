@@ -43,7 +43,10 @@ def _image_url_to_storage_key(image_url: str | None) -> str | None:
 class CardService:
     @staticmethod
     def validate_phone_format(phone: str | None) -> None:
-        if phone and not re.match(PHONE_REGEX, phone):
+        if not phone:
+            return
+        digits = re.sub(r"\D", "", phone)
+        if digits and not re.match(PHONE_REGEX, digits):
             raise BusinessException(*EMS.INVALID_PHONE_FORMAT)
 
     @staticmethod

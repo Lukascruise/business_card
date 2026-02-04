@@ -64,5 +64,5 @@ class CardEventMeta:
 CARD_SNAPSHOT_SCHEMA_VERSION = 1
 
 # --- 검증 (전화번호 등) ---
-
-PHONE_REGEX = r"^010-[2-9]\d{2,3}-\d{4}$"
+# 전화번호: 숫자만 저장·검증 (010 + 2~9 + 6~7자리). 프론트에서 하이픈 포맷 표시.
+PHONE_REGEX = r"^010[2-9]\d{6,7}$"
